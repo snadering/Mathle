@@ -16,20 +16,18 @@
   --slot-bg:      #252540;
   --result-color: #ffd080;
 
-  /* Fluid equation tile — fits 11 tiles + 10 gaps inside screen */
-  --eq-tile:  clamp(26px, calc((100vw - 96px) / 11), 54px);
-  --eq-font:  clamp(0.8rem, 3.8vw, 1.5rem);
-  --eq-gap:   clamp(3px, 0.8vw, 6px);
+  /* Desktop sizes (fixed) */
+  --eq-tile:   52px;
+  --eq-font:   1.5rem;
+  --eq-gap:    6px;
 
-  /* Guess history — 4 tiles, so can be much bigger */
-  --hist-tile: clamp(58px, 16vw, 80px);
-  --hist-font: clamp(1.5rem, 5vw, 2.2rem);
-  --hist-gap:  clamp(8px, 2.5vw, 14px);
+  --hist-tile: 68px;
+  --hist-font: 2rem;
+  --hist-gap:  12px;
 
-  /* Keyboard */
-  --key-size:  clamp(52px, 14vw, 72px);
-  --key-font:  clamp(1.2rem, 4vw, 1.6rem);
-  --key-gap:   clamp(6px, 2vw, 12px);
+  --key-size:  64px;
+  --key-font:  1.5rem;
+  --key-gap:   10px;
 
   --radius: 8px;
 }
@@ -37,34 +35,31 @@
 /* ─── RESET ───────────────────────────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* ─── LAYOUT — full viewport, keyboard pinned to bottom ─────────────────── */
-html, body {
-  height: 100%;
-  overflow: hidden;
-}
-
+/* ─── DESKTOP LAYOUT ─────────────────────────────────────────────────────── */
 body {
   background: var(--bg);
   color: var(--text);
   font-family: 'Segoe UI', system-ui, sans-serif;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   align-items: center;
+  overflow-x: hidden;
 }
 
 #app {
   width: 100%;
-  max-width: 600px;
-  height: 100dvh;
+  max-width: 540px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  align-items: center;
+  min-height: 100dvh;
 }
 
 /* ─── HEADER ─────────────────────────────────────────────────────────────── */
 header {
   width: 100%;
-  height: 52px;
+  height: 56px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -74,7 +69,7 @@ header {
 }
 
 header h1 {
-  font-size: clamp(1.4rem, 5vw, 1.9rem);
+  font-size: 1.9rem;
   font-weight: 800;
   letter-spacing: 0.14em;
 }
@@ -104,8 +99,8 @@ header h1 {
   background: #1e1040;
   border-bottom: 1px solid #6644aa;
   width: 100%;
-  padding: 6px 16px;
-  font-size: 0.78rem;
+  padding: 7px 16px;
+  font-size: 0.82rem;
   color: #bb99ff;
   justify-content: center;
   font-weight: 700;
@@ -114,21 +109,16 @@ header h1 {
   flex-shrink: 0;
 }
 
-/* ─── MAIN — scrollable game area ────────────────────────────────────────── */
+/* ─── MAIN ───────────────────────────────────────────────────────────────── */
 main {
   flex: 1;
   width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 16px 12px 10px;
-  gap: 20px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  /* hide scrollbar visually but keep it functional */
-  scrollbar-width: none;
+  padding: 20px 12px 12px;
+  gap: 24px;
 }
-main::-webkit-scrollbar { display: none; }
 
 /* ─── EQUATION DISPLAY ───────────────────────────────────────────────────── */
 #equation-display {
@@ -136,12 +126,11 @@ main::-webkit-scrollbar { display: none; }
   align-items: center;
   justify-content: center;
   gap: var(--eq-gap);
-  padding: 10px 14px;
+  padding: 12px 16px;
   background: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
   flex-shrink: 0;
-  width: 100%;
 }
 
 /* ─── BASE TILE ──────────────────────────────────────────────────────────── */
@@ -155,7 +144,6 @@ main::-webkit-scrollbar { display: none; }
   flex-shrink: 0;
 }
 
-/* Number tiles */
 .tile--number {
   width: var(--eq-tile);
   height: var(--eq-tile);
@@ -165,28 +153,25 @@ main::-webkit-scrollbar { display: none; }
   border: 2px solid #1a5080;
 }
 
-/* Equals sign */
 .tile--equals {
-  width: clamp(18px, 4vw, 28px);
+  width: 28px;
   height: var(--eq-tile);
-  font-size: clamp(0.9rem, 3vw, 1.3rem);
+  font-size: 1.3rem;
   background: transparent;
   color: var(--text-muted);
   border: none;
 }
 
-/* Result value */
 .tile--result {
   min-width: var(--eq-tile);
   height: var(--eq-tile);
-  padding: 0 6px;
-  font-size: clamp(0.85rem, 3.5vw, 1.4rem);
+  padding: 0 10px;
+  font-size: 1.4rem;
   background: var(--number-bg);
   color: var(--result-color);
   border: 2px solid #1a5080;
 }
 
-/* Operator input slots */
 .tile--slot {
   width: var(--eq-tile);
   height: var(--eq-tile);
@@ -280,19 +265,16 @@ main::-webkit-scrollbar { display: none; }
   width: 100%;
   display: flex;
   justify-content: center;
-  align-items: center;
   gap: var(--key-gap);
-  padding: 10px 12px 20px;
+  padding: 10px 16px 28px;
   flex-wrap: wrap;
   flex-shrink: 0;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
 }
 
 .key {
   width: var(--key-size);
   height: var(--key-size);
-  background: var(--key-bg);
+  background: var(--key-bg, #2a2a4a);
   color: var(--text);
   border: none;
   border-radius: var(--radius);
@@ -307,14 +289,13 @@ main::-webkit-scrollbar { display: none; }
   -webkit-tap-highlight-color: transparent;
 }
 .key:hover  { background: #3a3a60; }
-.key:active { transform: scale(0.92); }
+.key:active { transform: scale(0.93); }
 
 .key--action {
   width: auto;
-  padding: 0 clamp(12px, 3vw, 20px);
-  font-size: clamp(0.85rem, 2.5vw, 1rem);
+  padding: 0 18px;
+  font-size: 1rem;
   background: #2a3a5a;
-  height: var(--key-size);
 }
 .key--enter { background: #1a4a6a; }
 .key--enter:hover { background: #1e5a80; }
@@ -326,7 +307,7 @@ main::-webkit-scrollbar { display: none; }
 /* ─── TOASTS ──────────────────────────────────────────────────────────────── */
 #toast-container {
   position: fixed;
-  top: 60px;
+  top: 68px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -375,42 +356,41 @@ dialog::backdrop {
 }
 
 .modal-content {
-  padding: 24px 20px 20px;
+  padding: 28px 24px 24px;
   position: relative;
 }
 
 .modal-close {
   position: absolute;
   top: 12px;
-  right: 12px;
+  right: 14px;
   background: none;
   border: none;
   color: var(--text-muted);
   font-size: 1.2rem;
   cursor: pointer;
-  padding: 6px 10px;
+  padding: 4px 8px;
   border-radius: 4px;
   touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
 }
 .modal-close:hover { color: var(--text); background: #ffffff11; }
 
-dialog h2  { font-size: 1.3rem; margin-bottom: 10px; }
-dialog p   { font-size: 0.9rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
-dialog ul  { list-style: none; margin: 8px 0 12px; }
+dialog h2  { font-size: 1.4rem; margin-bottom: 12px; }
+dialog p   { font-size: 0.93rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 10px; }
+dialog ul  { list-style: none; margin: 8px 0 14px; }
 dialog ul li {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   color: var(--text-muted);
   margin-bottom: 7px;
 }
 
 .swatch {
   display: inline-block;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 4px;
   flex-shrink: 0;
 }
@@ -418,38 +398,23 @@ dialog ul li {
 .swatch.yellow { background: var(--yellow); }
 .swatch.grey   { background: #4a4a5a; }
 
-/* Example equation in help modal */
 .example-equation {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   flex-wrap: wrap;
-  margin: 12px 0;
+  margin: 14px 0;
 }
 .example-equation .tile,
-.example-equation .tile--op-result {
-  width: 34px;
-  height: 34px;
-  font-size: 0.95rem;
-}
-.example-equation .tile--result {
-  min-width: 34px;
-  height: 34px;
-  font-size: 0.9rem;
-  padding: 0 5px;
-}
-.example-equation .tile--equals {
-  width: 20px;
-  height: 34px;
-  font-size: 0.95rem;
-}
+.example-equation .tile--op-result { width: 38px; height: 38px; font-size: 1rem; }
+.example-equation .tile--result    { min-width: 38px; height: 38px; font-size: 0.95rem; padding: 0 6px; }
+.example-equation .tile--equals    { width: 22px; height: 38px; font-size: 1rem; }
 
-/* Stats grid */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-  margin: 14px 0;
+  gap: 8px;
+  margin: 16px 0;
 }
 .stat {
   display: flex;
@@ -457,10 +422,10 @@ dialog ul li {
   align-items: center;
   background: var(--bg);
   border-radius: 8px;
-  padding: 8px 4px;
+  padding: 10px 4px;
 }
-.stat-value { font-size: 1.6rem; font-weight: 800; color: var(--text); }
-.stat-label { font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
+.stat-value { font-size: 1.8rem; font-weight: 800; color: var(--text); }
+.stat-label { font-size: 0.68rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-top: 2px; }
 
 .modal-actions { display: flex; gap: 10px; margin-top: 10px; }
 .btn {
@@ -472,16 +437,86 @@ dialog ul li {
   font-weight: 700;
   cursor: pointer;
   touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
   transition: opacity 0.15s;
 }
 .btn:hover      { opacity: 0.85; }
 .btn--primary   { background: var(--green); color: #fff; }
 .btn--secondary { background: #2a3a6a; color: var(--text); }
 
-/* ─── SAFE AREA (iPhone notch / home bar) ────────────────────────────────── */
-@supports (padding: max(0px)) {
+/* ═══════════════════════════════════════════════════════════════════════════
+   MOBILE ONLY — everything below only applies on phones
+   ═══════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+
+  /* Fluid tile sizes that fit 11 equation elements across the screen */
+  :root {
+    --eq-tile:   clamp(24px, calc((100vw - 88px) / 11), 52px);
+    --eq-font:   clamp(0.75rem, 3.6vw, 1.5rem);
+    --eq-gap:    clamp(2px, 0.6vw, 6px);
+
+    --hist-tile: clamp(54px, 15vw, 68px);
+    --hist-font: clamp(1.4rem, 4.5vw, 2rem);
+    --hist-gap:  clamp(6px, 2vw, 12px);
+
+    --key-size:  clamp(50px, 13vw, 64px);
+    --key-font:  clamp(1.1rem, 3.8vw, 1.5rem);
+    --key-gap:   clamp(5px, 1.5vw, 10px);
+  }
+
+  /* Full-viewport layout: keyboard pinned at bottom */
+  html, body { height: 100%; overflow: hidden; }
+
+  #app {
+    height: 100dvh;
+    min-height: unset;
+    max-width: 100%;
+  }
+
+  header h1 { font-size: 1.5rem; }
+
+  /* Scrollable game area */
+  main {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 14px 8px 10px;
+    gap: 16px;
+    scrollbar-width: none;
+  }
+  main::-webkit-scrollbar { display: none; }
+
+  /* Tighter equation container */
+  #equation-display {
+    padding: 10px 10px;
+    gap: var(--eq-gap);
+    width: 100%;
+  }
+
+  .tile--equals {
+    width: clamp(16px, 3.5vw, 28px);
+    font-size: clamp(0.85rem, 2.8vw, 1.3rem);
+  }
+
+  .tile--result {
+    font-size: clamp(0.8rem, 3.2vw, 1.4rem);
+    padding: 0 6px;
+  }
+
+  /* Keyboard pinned at bottom with border */
   #keyboard {
-    padding-bottom: max(20px, env(safe-area-inset-bottom));
+    border-top: 1px solid var(--border);
+    padding: 8px 10px 16px;
+    gap: var(--key-gap);
+    background: var(--bg);
+  }
+
+  .key--action {
+    padding: 0 clamp(10px, 2.5vw, 18px);
+    font-size: clamp(0.8rem, 2.2vw, 1rem);
+  }
+
+  /* iPhone home bar safe area */
+  @supports (padding: max(0px)) {
+    #keyboard { padding-bottom: max(16px, env(safe-area-inset-bottom)); }
   }
 }
