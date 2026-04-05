@@ -104,22 +104,52 @@ function loadStats() {
 }
 
 function defaultStats() {
-  return { played: 0, wins: 0, currentStreak: 0, maxStreak: 0, distribution: [0,0,0,0,0,0] };
+  return { played: 0, wins: 0, currentStreak: 0, maxStreak: 0, distribution: [0,0,0,0,0,0], lastWonDate: null };
+}
+
+function getYesterday() {
+  const d = new Date(getTodayString());
+  d.setDate(d.getDate() - 1);
+  return d.toLocaleDateString('en-CA');
 }
 
 function saveStats(guessCount, won) {
   const stats = loadStats();
+  const today = getTodayString();
+
+  // Don't double-count if the game was already saved today (e.g. page reload)
+  if (stats.lastPlayedDate === today) return stats;
+  stats.lastPlayedDate = today;
+
   stats.played++;
   if (won) {
     stats.wins++;
-    stats.currentStreak++;
-    if (stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak;
     if (guessCount >= 1 && guessCount <= 6) stats.distribution[guessCount - 1]++;
+
+    // Streak continues only if last win was yesterday (or today — safety guard)
+    if (stats.lastWonDate === getYesterday() || stats.lastWonDate === today) {
+      stats.currentStreak++;
+    } else {
+      stats.currentStreak = 1; // broken or first ever win
+    }
+    if (stats.currentStreak > stats.maxStreak) stats.maxStreak = stats.currentStreak;
+    stats.lastWonDate = today;
   } else {
     stats.currentStreak = 0;
   }
+
   try { localStorage.setItem(STATS_KEY, JSON.stringify(stats)); } catch (_) {}
   return stats;
+}
+
+// Returns the streak to display — resets to 0 if the player skipped a day
+function getDisplayStreak(stats) {
+  if (!stats.lastWonDate) return 0;
+  const today = getTodayString();
+  if (stats.lastWonDate === today || stats.lastWonDate === getYesterday()) {
+    return stats.currentStreak;
+  }
+  return 0; // missed a day, streak is broken
 }
 
 // ─── UI HELPERS ───────────────────────────────────────────────────────────────
@@ -359,7 +389,7 @@ function showResultModal(won, guessCount, stats) {
   document.getElementById('stat-played').textContent = stats.played;
   document.getElementById('stat-winpct').textContent = stats.played
     ? Math.round((stats.wins / stats.played) * 100) + '%' : '0%';
-  document.getElementById('stat-streak').textContent = stats.currentStreak;
+  document.getElementById('stat-streak').textContent = getDisplayStreak(stats);
   document.getElementById('stat-maxstreak').textContent = stats.maxStreak;
 
   document.getElementById('free-play-btn').style.display = won ? 'none' : 'block';
