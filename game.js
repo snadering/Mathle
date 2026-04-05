@@ -364,7 +364,8 @@ function submitGuess() {
       const stats = saveStats(rowIdx + 1, true);
       setTimeout(() => showResultModal(true, rowIdx + 1, stats), 400);
     } else if (state.guesses.length >= CONFIG.maxGuesses) {
-      state.status = 'lost';
+      state.status = 'freeplay';
+      document.getElementById('freeplay-banner').style.display = 'flex';
       saveState();
       const stats = saveStats(state.guesses.length, false);
       setTimeout(() => showResultModal(false, state.guesses.length, stats), 400);
@@ -456,6 +457,8 @@ function init() {
 
   if (saved) {
     state = saved;
+    // migrate old 'lost' status to 'freeplay'
+    if (state.status === 'lost') state.status = 'freeplay';
   } else {
     state = {
       puzzle: getPuzzle(today),
@@ -499,10 +502,7 @@ function init() {
   });
 
   document.getElementById('free-play-btn').addEventListener('click', () => {
-    state.status = 'freeplay';
-    saveState();
     document.getElementById('result-modal').close();
-    document.getElementById('freeplay-banner').style.display = 'flex';
     renderCurrentGuess();
   });
 
