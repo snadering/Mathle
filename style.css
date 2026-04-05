@@ -187,6 +187,12 @@ main {
   border-color: #6666aa;
 }
 
+.tile--slot-solved {
+  background: var(--green);
+  border: 2px solid var(--green);
+  color: #fff;
+}
+
 .tile--slot-active {
   border-style: solid;
   border-color: #9988ee;

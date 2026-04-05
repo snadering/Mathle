@@ -203,6 +203,15 @@ function buildEquationDisplay() {
   container.appendChild(resTile);
 }
 
+function lockEquationDisplay(ops) {
+  const slots = document.querySelectorAll('#equation-display .tile--slot');
+  slots.forEach((slot, i) => {
+    slot.classList.remove('tile--slot-active', 'tile--slot-filled');
+    slot.classList.add('tile--slot-solved');
+    slot.textContent = displayOp(ops[i]);
+  });
+}
+
 function renderCurrentGuess() {
   if (state.status === 'won') return;
   const slots = document.querySelectorAll('#equation-display .tile--slot');
@@ -331,6 +340,7 @@ function submitGuess() {
     const won = feedback.every(f => f === 'green');
     if (won) {
       state.status = 'won';
+      lockEquationDisplay(submittedOps);
       saveState();
       setTimeout(() => showToast('You solved it! 🎉', 2500), 200);
     } else {
@@ -349,6 +359,7 @@ function submitGuess() {
     const won = feedback.every(f => f === 'green');
     if (won) {
       state.status = 'won';
+      lockEquationDisplay(submittedOps);
       saveState();
       const stats = saveStats(rowIdx + 1, true);
       setTimeout(() => showResultModal(true, rowIdx + 1, stats), 400);
