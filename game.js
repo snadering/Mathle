@@ -384,7 +384,7 @@ function showResultModal(won, guessCount, stats) {
   document.getElementById('result-title').textContent = won ? 'Solved!' : 'Game Over';
   document.getElementById('result-subtitle').textContent = won
     ? `You got it in ${guessCount} guess${guessCount === 1 ? '' : 'es'}!`
-    : `Answer: ${state.puzzle.operators.map(displayOp).join('  ')}`;
+    : `Keep trying in free play!`;
 
   document.getElementById('stat-played').textContent = stats.played;
   document.getElementById('stat-winpct').textContent = stats.played
