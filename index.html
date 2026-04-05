@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#1a1a2e" />
+  <title>Mathle</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="app">
+
+    <!-- Header -->
+    <header>
+      <button id="help-btn" class="icon-btn" aria-label="How to play">?</button>
+      <h1>Mathle</h1>
+      <div class="header-right"><!-- spacer --></div>
+    </header>
+
+    <!-- Free play banner (hidden until freeplay mode) -->
+    <div id="freeplay-banner" style="display:none">
+      Free Play — no feedback shown
+    </div>
+
+    <!-- Game area -->
+    <main>
+      <!-- Equation shown once — operator slots filled as user types -->
+      <div id="equation-display"></div>
+
+      <div class="guess-history-label" id="guess-history-label" style="display:none">Guesses</div>
+
+      <!-- Completed guesses appear here, one row per attempt -->
+      <div id="guess-history"></div>
+    </main>
+
+    <!-- On-screen keyboard -->
+    <div id="keyboard"></div>
+
+    <!-- Toast notifications -->
+    <div id="toast-container" aria-live="polite"></div>
+
+    <!-- ── Help Modal ── -->
+    <dialog id="help-modal" aria-label="How to play">
+      <div class="modal-content">
+        <button class="modal-close" aria-label="Close">✕</button>
+        <h2>How to Play</h2>
+        <p>Fill in the <strong>4 operators</strong> between the numbers to make the equation true.</p>
+
+        <div class="example-equation">
+          <span class="tile tile--number">3</span>
+          <span class="tile tile--op-result green">×</span>
+          <span class="tile tile--number">4</span>
+          <span class="tile tile--op-result yellow">+</span>
+          <span class="tile tile--number">2</span>
+          <span class="tile tile--op-result grey">÷</span>
+          <span class="tile tile--number">5</span>
+          <span class="tile tile--op-result green">−</span>
+          <span class="tile tile--number">1</span>
+          <span class="tile tile--equals">=</span>
+          <span class="tile tile--result">11</span>
+        </div>
+
+        <p>You have <strong>6 attempts</strong>. After each guess:</p>
+        <ul>
+          <li><span class="swatch green"></span> <strong>Green</strong> — correct operator, correct slot</li>
+          <li><span class="swatch yellow"></span> <strong>Yellow</strong> — correct operator, wrong slot</li>
+          <li><span class="swatch grey"></span> <strong>Grey</strong> — this operator is not used</li>
+        </ul>
+
+        <p>⚠️ Standard math rules apply — <strong>× and ÷ are evaluated before + and −</strong>.</p>
+        <p>Your guess must equal the result shown after the <strong>=</strong> sign, otherwise it won't be accepted.</p>
+        <p>A new puzzle every day!</p>
+      </div>
+    </dialog>
+
+    <!-- ── Result Modal ── -->
+    <dialog id="result-modal" aria-label="Game result">
+      <div class="modal-content">
+        <button class="modal-close" aria-label="Close">✕</button>
+        <h2 id="result-title"></h2>
+        <p id="result-subtitle"></p>
+
+        <div class="stats-grid">
+          <div class="stat">
+            <span class="stat-value" id="stat-played">0</span>
+            <span class="stat-label">Played</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-winpct">0%</span>
+            <span class="stat-label">Win %</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-streak">0</span>
+            <span class="stat-label">Streak</span>
+          </div>
+          <div class="stat">
+            <span class="stat-value" id="stat-maxstreak">0</span>
+            <span class="stat-label">Best</span>
+          </div>
+        </div>
+
+        <div class="modal-actions">
+          <button id="share-btn" class="btn btn--primary">Share 📋</button>
+          <button id="free-play-btn" class="btn btn--secondary">Keep Trying</button>
+        </div>
+      </div>
+    </dialog>
+
+  </div>
+
+  <script src="puzzles.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
