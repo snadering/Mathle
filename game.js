@@ -328,7 +328,6 @@ function submitGuess() {
   renderCurrentGuess(); // clear the slots immediately
 
   if (state.status === 'freeplay') {
-    addFreePlayRow(submittedOps);
     const won = feedback.every(f => f === 'green');
     if (won) {
       state.status = 'won';
@@ -336,6 +335,7 @@ function submitGuess() {
       setTimeout(() => showToast('You solved it! 🎉', 2500), 200);
     } else {
       saveState();
+      setTimeout(() => showToast('Not quite — keep trying!', 1800), 100);
     }
     return;
   }
