@@ -578,7 +578,7 @@ function init() {
     html2canvas(modalContent, {
       scale: 2,
       useCORS: true,
-      backgroundColor: getComputedStyle(modalContent).backgroundColor,
+      backgroundColor: '#16213e',
     }).then(canvas => {
       actions.style.visibility = '';
       canvas.toBlob(blob => {
