@@ -10,12 +10,14 @@ function displayOp(op) { return OP_DISPLAY[op] || op; }
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
 let state = {
-  puzzle: null,       // { numbers, operators, result }
-  guesses: [],        // array of operator arrays e.g. [['+','-','*','/'], ...]
-  feedbacks: [],      // array of feedback arrays e.g. [['green','grey','yellow','green'], ...]
-  status: 'playing',  // 'playing' | 'won' | 'lost' | 'freeplay'
-  currentGuess: [],   // operators picked so far for the current row
+  puzzle: null,
+  guesses: [],
+  feedbacks: [],
+  status: 'playing',
+  currentGuess: [],
   date: '',
+  hardMode: true,      // hard mode on by default — no feedback colors shown
+  usedEasyMode: false, // true if easy mode was toggled on after the first guess
 };
 
 // ─── PUZZLE SELECTION ─────────────────────────────────────────────────────────
@@ -251,7 +253,7 @@ function createGuessRow(ops, feedback) {
     tile.className = 'tile tile--op-result';
     tile.textContent = displayOp(op);
     if (feedback) {
-      tile.classList.add(feedback[i]);
+      tile.classList.add(state.hardMode ? 'grey' : feedback[i]);
     } else {
       tile.classList.add('no-color');
     }
@@ -283,7 +285,7 @@ function revealGuessRow(ops, feedback, onComplete) {
       tile.classList.add('flip');
       setTimeout(() => {
         tile.classList.remove('tile--pending', 'flip');
-        tile.classList.add(feedback[i], 'flipped');
+        tile.classList.add(state.hardMode ? 'grey' : feedback[i], 'flipped');
         if (i === tiles.length - 1) {
           setTimeout(() => onComplete && onComplete(), 200);
         }
@@ -301,6 +303,7 @@ function addFreePlayRow(ops) {
 
 // ─── KEYBOARD COLORS ──────────────────────────────────────────────────────────
 function updateKeyboard(feedback, guessOps) {
+  if (state.hardMode) return;
   guessOps.forEach((op, i) => {
     const key = document.querySelector(`.key[data-op="${op}"]`);
     if (!key) return;
@@ -313,6 +316,45 @@ function updateKeyboard(feedback, guessOps) {
       key.classList.add(next);
     }
   });
+}
+
+// ─── HARD / EASY MODE ────────────────────────────────────────────────────────
+function rerenderGuessHistory() {
+  const rows = document.querySelectorAll('#guess-history .guess-row');
+  rows.forEach((row, rowIdx) => {
+    const feedback = state.feedbacks[rowIdx];
+    if (!feedback) return;
+    row.querySelectorAll('.tile--op-result').forEach((tile, i) => {
+      tile.classList.remove('green', 'yellow', 'grey');
+      tile.classList.add(state.hardMode ? 'grey' : feedback[i]);
+    });
+  });
+
+  // Keyboard: show colors in easy mode, clear in hard mode
+  document.querySelectorAll('.key[data-op]').forEach(k => {
+    k.classList.remove('green', 'yellow', 'grey');
+    k.dataset.state = '';
+  });
+  if (!state.hardMode) {
+    state.feedbacks.forEach((fb, i) => updateKeyboard(fb, state.guesses[i]));
+  }
+}
+
+function updateToggleUI() {
+  // checkbox checked = easy mode (feedback on), unchecked = hard mode (feedback off)
+  document.getElementById('hard-mode-checkbox').checked = !state.hardMode;
+  document.getElementById('mode-label').textContent = state.hardMode ? 'Hard' : 'Easy';
+  document.getElementById('mode-toggle').classList.toggle('mode-toggle--easy', !state.hardMode);
+}
+
+function toggleMode() {
+  state.hardMode = !state.hardMode;
+  if (!state.hardMode && state.guesses.length > 0) {
+    state.usedEasyMode = true;
+  }
+  saveState();
+  rerenderGuessHistory();
+  updateToggleUI();
 }
 
 // ─── SUBMIT GUESS ─────────────────────────────────────────────────────────────
@@ -405,6 +447,7 @@ function showResultModal(won, guessCount, stats) {
   document.getElementById('stat-maxstreak').textContent = stats.maxStreak;
 
   document.getElementById('free-play-btn').style.display = won ? 'none' : 'block';
+  document.getElementById('easy-mode-notice').style.display = state.usedEasyMode ? 'block' : 'none';
   modal.showModal();
 }
 
@@ -457,8 +500,10 @@ function init() {
 
   if (saved) {
     state = saved;
-    // migrate old 'lost' status to 'freeplay'
     if (state.status === 'lost') state.status = 'freeplay';
+    // default hardMode to true if not present in old saves
+    if (state.hardMode === undefined) state.hardMode = true;
+    if (state.usedEasyMode === undefined) state.usedEasyMode = false;
   } else {
     state = {
       puzzle: getPuzzle(today),
@@ -490,6 +535,11 @@ function init() {
     const stats = loadStats();
     setTimeout(() => showResultModal(state.status === 'won', state.guesses.length, stats), 600);
   }
+
+  // Sync toggle UI to loaded state
+  updateToggleUI();
+  // Listen to checkbox change (not label click — avoids double-fire)
+  document.getElementById('hard-mode-checkbox').addEventListener('change', toggleMode);
 
   document.getElementById('help-btn').addEventListener('click', () => {
     document.getElementById('help-modal').showModal();

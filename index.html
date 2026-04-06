@@ -14,7 +14,13 @@
     <header>
       <button id="help-btn" class="icon-btn" aria-label="How to play">?</button>
       <h1>Mathle</h1>
-      <div class="header-right"><!-- spacer --></div>
+      <label class="mode-toggle" id="mode-toggle" title="Toggle difficulty">
+        <span class="mode-toggle__label" id="mode-label">Hard</span>
+        <div class="mode-toggle__track">
+          <input type="checkbox" id="hard-mode-checkbox" aria-label="Easy mode" />
+          <span class="mode-toggle__thumb"></span>
+        </div>
+      </label>
     </header>
 
     <!-- Free play banner (hidden until freeplay mode) -->
@@ -79,6 +85,7 @@
         <button class="modal-close" aria-label="Close">✕</button>
         <h2 id="result-title"></h2>
         <p id="result-subtitle"></p>
+        <p id="easy-mode-notice" style="display:none; color:#b59f3b; font-size:0.85rem;">⚠️ Easy mode was used</p>
 
         <div class="stats-grid">
           <div class="stat">
