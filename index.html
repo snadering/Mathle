@@ -50,7 +50,7 @@
       <div class="modal-content">
         <button class="modal-close" aria-label="Close">✕</button>
         <h2>How to Play</h2>
-        <p>Fill in the <strong>4 operators</strong> between the numbers to make the equation true.</p>
+        <p>Fill in the <strong>4 operators</strong> between the numbers so the equation equals the result.</p>
 
         <div class="example-equation">
           <span class="tile tile--number">3</span>
@@ -58,23 +58,32 @@
           <span class="tile tile--number">4</span>
           <span class="tile tile--op-result yellow">+</span>
           <span class="tile tile--number">2</span>
-          <span class="tile tile--op-result grey">÷</span>
-          <span class="tile tile--number">5</span>
-          <span class="tile tile--op-result green">−</span>
-          <span class="tile tile--number">1</span>
           <span class="tile tile--equals">=</span>
-          <span class="tile tile--result">11</span>
+          <span class="tile tile--result">14</span>
         </div>
 
-        <p>You have <strong>6 attempts</strong>. After each guess:</p>
+        <p>You have <strong>6 attempts</strong>. Each guess shows feedback:</p>
         <ul>
-          <li><span class="swatch green"></span> <strong>Green</strong> — correct operator, correct slot</li>
-          <li><span class="swatch yellow"></span> <strong>Yellow</strong> — correct operator, wrong slot</li>
-          <li><span class="swatch grey"></span> <strong>Grey</strong> — this operator is not used</li>
+          <li><span class="swatch green"></span> <strong>Green</strong> — correct operator in the correct slot</li>
+          <li><span class="swatch yellow"></span> <strong>Yellow</strong> — correct operator but in the wrong slot</li>
+          <li><span class="swatch grey"></span> <strong>Grey</strong> — this operator is not used at all</li>
         </ul>
 
-        <p>⚠️ Standard math rules apply — <strong>× and ÷ are evaluated before + and −</strong>.</p>
-        <p>Your guess must equal the result shown after the <strong>=</strong> sign, otherwise it won't be accepted.</p>
+        <p>⚠️ Standard math order applies — <strong>× and ÷ are calculated before + and −</strong>.</p>
+
+        <hr class="help-divider" />
+
+        <p><strong>Hard / Easy mode</strong></p>
+        <p>The toggle in the top right controls feedback visibility.</p>
+        <ul>
+          <li>🔴 <strong>Hard</strong> — all guesses appear grey. No hints.</li>
+          <li>🟢 <strong>Easy</strong> — full colour feedback after each guess.</li>
+        </ul>
+        <p>You can switch at any time. If you switch to Easy after your first guess, the result will be marked as an Easy mode solve.</p>
+
+        <hr class="help-divider" />
+
+        <p>After 6 failed attempts, <strong>Free Play</strong> unlocks — keep guessing until you find the answer.</p>
         <p>A new puzzle every day!</p>
       </div>
     </dialog>

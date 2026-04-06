@@ -464,6 +464,12 @@ dialog ul li {
 .swatch.yellow { background: var(--yellow); }
 .swatch.grey   { background: #4a4a5a; }
 
+.help-divider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 14px 0;
+}
+
 .example-equation {
   display: flex;
   align-items: center;
