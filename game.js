@@ -455,7 +455,8 @@ function buildShareText() {
   const lines = state.feedbacks.map(fb =>
     fb.map(f => f === 'green' ? '🟩' : f === 'yellow' ? '🟨' : '⬛').join('')
   );
-  return `Mathle ${state.date} ${state.status === 'won' ? state.guesses.length : 'X'}/${CONFIG.maxGuesses}\n\n${lines.join('\n')}`;
+  const easyTag = state.usedEasyMode ? ' 🟢 Easy Mode' : '';
+  return `Mathle ${state.date} ${state.status === 'won' ? state.guesses.length : 'X'}/${CONFIG.maxGuesses}${easyTag}\n\n${lines.join('\n')}`;
 }
 
 // ─── KEYBOARD (on-screen) ─────────────────────────────────────────────────────
@@ -548,9 +549,17 @@ function init() {
   });
 
   document.getElementById('share-btn').addEventListener('click', () => {
+    const btn = document.getElementById('share-btn');
     navigator.clipboard.writeText(buildShareText())
-      .then(() => showToast('Copied to clipboard!'))
-      .catch(() => showToast('Copy failed'));
+      .then(() => {
+        btn.textContent = 'Copied! ✓';
+        btn.disabled = true;
+        setTimeout(() => { btn.textContent = 'Share 📋'; btn.disabled = false; }, 2000);
+      })
+      .catch(() => {
+        btn.textContent = 'Failed ✕';
+        setTimeout(() => { btn.textContent = 'Share 📋'; }, 2000);
+      });
   });
 
   document.getElementById('free-play-btn').addEventListener('click', () => {
