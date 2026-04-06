@@ -550,16 +550,51 @@ function init() {
 
   document.getElementById('share-btn').addEventListener('click', () => {
     const btn = document.getElementById('share-btn');
-    navigator.clipboard.writeText(buildShareText())
-      .then(() => {
-        btn.textContent = 'Copied! ✓';
-        btn.disabled = true;
-        setTimeout(() => { btn.textContent = 'Share 📋'; btn.disabled = false; }, 2000);
-      })
-      .catch(() => {
-        btn.textContent = 'Failed ✕';
-        setTimeout(() => { btn.textContent = 'Share 📋'; }, 2000);
-      });
+    const isMobile = window.matchMedia('(max-width: 600px)').matches;
+
+    function copyText() {
+      navigator.clipboard.writeText(buildShareText())
+        .then(() => {
+          btn.textContent = 'Copied! ✓';
+          btn.disabled = true;
+          setTimeout(() => { btn.textContent = 'Share 📋'; btn.disabled = false; }, 2000);
+        })
+        .catch(() => {
+          btn.textContent = 'Failed ✕';
+          setTimeout(() => { btn.textContent = 'Share 📋'; }, 2000);
+        });
+    }
+
+    if (isMobile || typeof html2canvas === 'undefined') {
+      copyText();
+      return;
+    }
+
+    // Desktop: capture the modal content as an image
+    const modalContent = document.querySelector('#result-modal .modal-content');
+    const actions = modalContent.querySelector('.modal-actions');
+    actions.style.visibility = 'hidden';
+
+    html2canvas(modalContent, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: getComputedStyle(modalContent).backgroundColor,
+    }).then(canvas => {
+      actions.style.visibility = '';
+      canvas.toBlob(blob => {
+        if (!blob) { copyText(); return; }
+        navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })])
+          .then(() => {
+            btn.textContent = 'Image Copied! ✓';
+            btn.disabled = true;
+            setTimeout(() => { btn.textContent = 'Share 📋'; btn.disabled = false; }, 2000);
+          })
+          .catch(() => copyText()); // fallback to text if clipboard.write fails
+      }, 'image/png');
+    }).catch(() => {
+      actions.style.visibility = '';
+      copyText();
+    });
   });
 
   document.getElementById('free-play-btn').addEventListener('click', () => {
