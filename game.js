@@ -501,8 +501,6 @@ function init() {
   if (saved) {
     state = saved;
     if (state.status === 'lost') state.status = 'freeplay';
-    // default hardMode to true if not present in old saves
-    if (state.hardMode === undefined) state.hardMode = true;
     if (state.usedEasyMode === undefined) state.usedEasyMode = false;
   } else {
     state = {
@@ -512,8 +510,12 @@ function init() {
       status: 'playing',
       currentGuess: [],
       date: today,
+      usedEasyMode: false,
     };
   }
+
+  // Always start in hard mode regardless of what was saved
+  state.hardMode = true;
 
   buildEquationDisplay();
   buildGuessHistory();
